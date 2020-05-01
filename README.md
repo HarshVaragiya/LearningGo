@@ -1,5 +1,7 @@
 # Learning Go
 
+Source [Tour of Go](https://tour.golang.org)
+
 ## Data types and default values
 ```text
 bool (defaults to false)
