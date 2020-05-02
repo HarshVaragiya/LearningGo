@@ -3,23 +3,7 @@
 Source [Tour of Go](https://tour.golang.org)
 
 ## Data types and default values
-```text
-bool (defaults to false)
-
-string (defaults to "")
-
-int  int8  int16  int32  int64
-uint uint8 uint16 uint32 uint64 uintptr  (all default to 0)
-
-byte // alias for uint8
-
-rune // alias for int32
-     // represents a Unicode code point
-
-float32 float64
-
-complex64 complex128 (inside math/cmplx)
-```
+![Data Types](assets/data_types.png)
 
 ## Structure 
 
@@ -28,20 +12,31 @@ complex64 complex128 (inside math/cmplx)
 - ### Variables 
     - [Variable Data Types](Variables/DataTypes.go)
     - [Variable Declaration](Variables/InitAndShortVarDeclaration.go)
+    - [Type Casting](Variables/TypeCasting.go)
     - [Variable Scopes](Variables/Vars.go)
 
 - ### Functions
     - [Function Declaration](Functions/Add.go)
     - [Return Multiple Vals](Functions/Swap.go)
     - [Naked Return Values](Functions/NakedReturnValues.go)
+    - [Defers](Functions/Defer.go)
+    - [Stacked Defers](Functions/StackedDefers.go)
 
+- ### Conditionals
+    - [If Else](Conditionals/IfElse.go)
+    - [Switch Statement](Conditionals/Switch.go)
+    - [Switch Without Conditions](Conditionals/SwitchWithoutConditions.go)
+    
+- ### Loops
+    - [For Loop](Loops/ForLoop.go)
+    - [While Loop](Loops/WhileLoop.go)
+    
 - ### Randoms
     - [Random Number Generator](Randoms/Random.go)
     - [Show Current Time](Randoms/Time.go)
 
-
-
-
+## Exercise Problems
+- [Square Root](Exercise/SquareRoot)
 
 
 
