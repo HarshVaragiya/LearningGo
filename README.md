@@ -8,6 +8,7 @@ Source [Tour of Go](https://tour.golang.org)
 ## Structure 
 
 - [Hello World](HelloWorld/HelloWorld.go)
+- [Basic IO](HelloWorld/BasicIO.go)
 
 - ### Variables 
     - [Variable Data Types](Variables/DataTypes.go)
