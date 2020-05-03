@@ -12,7 +12,7 @@ This selects a half-open range which includes the first element, but excludes th
 
 The following expression creates a slice which includes elements 1 through 3 of a:
 
-```go
+```go 
 a[1:4]
 ```
 
@@ -41,4 +41,21 @@ a[0:10]
 a[:10]
 a[0:]
 a[:]
+```
+
+# Making Slices
+Slices can be created with the built-in make function; this is how you create dynamically-sized arrays.
+
+The make function allocates a zeroed array and returns a slice that refers to that array:
+
+```go
+a := make([]int, 5)  // len(a)=5
+```
+
+To specify a capacity, pass a third argument to make:
+
+```go
+b := make([]int, 0, 5) // len(b)=0, cap(b)=5
+b = b[:cap(b)] // len(b)=5, cap(b)=5
+b = b[1:]      // len(b)=4, cap(b)
 ```
