@@ -23,6 +23,7 @@ Source [Tour of Go](https://tour.golang.org)
     - [Defers](Functions/Defer.go)
     - [Stacked Defers](Functions/StackedDefers.go)
     - [Passing Functions as Arguments](Functions/PassingFunctionAsArgument.go)
+    - [Function Closure](Functions/FunctionClosures.go)
 
 - ### Conditionals
     - [If Else](Conditionals/IfElse.go)
