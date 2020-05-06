@@ -5,30 +5,30 @@ import (
 	"math"
 )
 
-func display(z,diff float64){
-	fmt.Println("[DEBUG] Z = ",z," Z*Z = ",z*z," Diff = ",diff)
+func display(z, diff float64) {
+	fmt.Println("[DEBUG] Z = ", z, " Z*Z = ", z*z, " Diff = ", diff)
 }
 
-func Sqrt(x float64)(z float64){
+func Sqrt(x float64) (z float64) {
 
 	z = 10089774
-	diff := x - (z*z)
-	display(z,diff)
+	diff := x - (z * z)
+	display(z, diff)
 	last_diff := diff
-	i:=0
+	i := 0
 	const resolution float64 = 0.000001
-	const MaxIters int = 0xffff
+	const MaxIters int = 0xff
 
-	for ;i< MaxIters;i++{
+	for ; i < MaxIters; i++ {
 
-		z = z - ((z*z -x) / (2*z))
+		z = z - ((z*z - x) / (2 * z))
 
 		last_diff = diff
-		diff = x - (z*z)
+		diff = x - (z * z)
 
-		display(z,diff)
+		// display(z,diff)
 
-		if diff == 0 || last_diff == -diff || (math.Abs(last_diff) - math.Abs(diff) < resolution) {
+		if diff == 0 || last_diff == -diff || (math.Abs(last_diff)-math.Abs(diff) < resolution) {
 			break
 		}
 

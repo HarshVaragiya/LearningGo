@@ -23,3 +23,6 @@ Next, change the loop condition to stop once the value has stopped changing (or 
 
 # Algo
 If you are interested in the details of the algorithm, the z² − x above is how far away z² is from where it needs to be (x), and the division by 2z is the derivative of z², to scale how much we adjust z by how quickly z² is changing. This general approach is called Newton's method. It works well for many functions but especially well for square root.
+
+## Output
+![Output.png](Output.png)

@@ -4,3 +4,6 @@
 
 ## Hints
 You might find `strings.Fields` helpful.
+
+## Output
+![Output.png](Output.png)
