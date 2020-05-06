@@ -22,6 +22,7 @@ Source [Tour of Go](https://tour.golang.org)
     - [Naked Return Values](Functions/NakedReturnValues.go)
     - [Defers](Functions/Defer.go)
     - [Stacked Defers](Functions/StackedDefers.go)
+    - [Passing Functions as Arguments](Functions/PassingFunctionAsArgument.go)
 
 - ### Conditionals
     - [If Else](Conditionals/IfElse.go)
@@ -36,8 +37,17 @@ Source [Tour of Go](https://tour.golang.org)
     - [Random Number Generator](Randoms/Random.go)
     - [Show Current Time](Randoms/Time.go)
 
+# Data Structures
+*Details about them are in their respective folders*
+- [Arrays](DataTypes/Array)
+- [Maps](DataTypes/Map)
+- [Slices](DataTypes/Slice)
+- [Struct](DataTypes/Struct)
+
 ## Exercise Problems
 - [Square Root](Exercise/SquareRoot)
+- [Picture](Exercise/Pic-Slices)
+- [WordCounter](Exercise/WordCount)
 
 
 
