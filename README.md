@@ -49,6 +49,6 @@ Source [Tour of Go](https://tour.golang.org)
 - [Square Root](Exercise/SquareRoot)
 - [Picture](Exercise/Pic-Slices)
 - [WordCounter](Exercise/WordCount)
-
+- [Fibonacci](Exercise/Fibonacci)
 
 
