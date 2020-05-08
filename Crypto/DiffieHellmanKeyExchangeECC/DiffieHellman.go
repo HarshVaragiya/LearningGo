@@ -5,39 +5,56 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/sha256"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"io"
 )
 
-func GenerateKeypair(curve elliptic.Curve, entropySource io.Reader) (privateKey *ecdsa.PrivateKey, publicKey ecdsa.PublicKey) {
-	privateKey, err := ecdsa.GenerateKey(curve, entropySource)
+type ECCKey struct {
+	privateKey *ecdsa.PrivateKey
+	publicKey  *ecdsa.PublicKey
+}
+
+func (eccKey ECCKey) X509encodePrivateKey() []byte {
+	bytes, _ := x509.MarshalECPrivateKey(eccKey.privateKey)
+	return pem.EncodeToMemory(&pem.Block{Type: "EC PRIVATE KEY", Bytes: bytes})
+}
+
+func (eccKey *ECCKey) GenerateKeypair(curve elliptic.Curve, entropySource io.Reader) {
+	var err error
+	eccKey.privateKey, err = ecdsa.GenerateKey(curve, entropySource)
 	if err != nil {
 		panic(err.Error())
 	}
-	publicKey = privateKey.PublicKey
+	eccKey.publicKey = &eccKey.privateKey.PublicKey
 	return
 }
 
-func GenerateSharedSecret(privatekey *ecdsa.PrivateKey, publicKey ecdsa.PublicKey) (sharedSecret [32]byte) {
-	secret, _ := publicKey.Curve.ScalarMult(publicKey.X, publicKey.Y, privatekey.D.Bytes())
+func (eccKey ECCKey) GenerateSharedSecret(publicKey *ecdsa.PublicKey) (sharedSecret [32]byte) {
+	secret, _ := publicKey.Curve.ScalarMult(publicKey.X, publicKey.Y, eccKey.privateKey.D.Bytes())
 	sharedSecret = sha256.Sum256(secret.Bytes())
 	return
 }
 
 func main() {
+
 	var selectedCurve elliptic.Curve = elliptic.P521()
 
-	privateKeyAlice, publicKeyAlice := GenerateKeypair(selectedCurve, rand.Reader)
-	privateKeyBob, publicKeyBob := GenerateKeypair(selectedCurve, rand.Reader)
+	AliceKey := ECCKey{}
+	AliceKey.GenerateKeypair(selectedCurve, rand.Reader)
 
-	fmt.Printf("[DEBUG] Private key (Alice) %x \n", privateKeyAlice.D)
-	fmt.Printf("[DEBUG] Private key (Bob)   %x \n", privateKeyBob.D)
+	BobKey := ECCKey{}
+	BobKey.GenerateKeypair(selectedCurve, rand.Reader)
 
-	fmt.Printf("[DEBUG] Public key (Alice) (x:%x, y:%x) \n", publicKeyAlice.X, publicKeyAlice.Y)
-	fmt.Printf("[DEBUG] Public key (Bob)   (x:%x, y:%x) \n", publicKeyBob.X, publicKeyBob.Y)
+	fmt.Printf("[DEBUG] Private key (Alice) %x \n", AliceKey.privateKey.D)
+	fmt.Printf("[DEBUG] Private key (Bob)   %x \n", BobKey.privateKey.D)
 
-	secretAlice := GenerateSharedSecret(privateKeyAlice, publicKeyBob)
-	secretBob := GenerateSharedSecret(privateKeyBob, publicKeyAlice)
+	fmt.Printf("[DEBUG] Public key (Alice) (x:%x, y:%x) \n", AliceKey.publicKey.X, AliceKey.publicKey.Y)
+	fmt.Printf("[DEBUG] Public key (Bob)   (x:%x, y:%x) \n", BobKey.publicKey.X, BobKey.publicKey.Y)
+
+	secretAlice := AliceKey.GenerateSharedSecret(BobKey.publicKey)
+	secretBob := BobKey.GenerateSharedSecret(AliceKey.publicKey)
 
 	fmt.Printf("[INFO] Shared key (Alice) %x \n", secretAlice)
 	fmt.Printf("[INFO] Shared key (Bob)   %x \n", secretBob)

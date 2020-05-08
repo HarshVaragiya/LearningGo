@@ -27,7 +27,46 @@ func (rsaKey *RSAKey) GenerateKeypair(keySize int) {
 	rsaKey.publicKey = &rsaKey.privateKey.PublicKey
 }
 
+func (rsaKey *RSAKey) importPublicKey(x509encodedPublicKey []byte) {
+	var err error
+	block, _ := pem.Decode(x509encodedPublicKey)
+	blockBytes := block.Bytes
+	rsaKey.publicKey, err = x509.ParsePKCS1PublicKey(blockBytes)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func (rsaKey *RSAKey) importPrivateKey(x509encodedPrivateKey []byte) {
+	var err error
+	block, _ := pem.Decode(x509encodedPrivateKey)
+	rsaKey.privateKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func (rsaKey *RSAKey) importEncryptedPrivateKey(x509encodedEncryptedPrivateKey []byte, passphrase string) {
+	var err error
+	block, _ := pem.Decode(x509encodedEncryptedPrivateKey)
+	ok := x509.IsEncryptedPEMBlock(block)
+	if ok {
+		block.Bytes, err = x509.DecryptPEMBlock(block, []byte(passphrase))
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+	rsaKey.privateKey, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		panic(err.Error())
+	}
+
+}
+
 func (rsaKey *RSAKey) X509encodePrivateKey() (bytes []byte) {
+	if rsaKey.privateKey == nil {
+		panic("Private Key Not Found")
+	}
 	var pemPrivateBlock = &pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(rsaKey.privateKey),
@@ -56,6 +95,9 @@ func (rsaKey RSAKey) EncryptOAEP(message []byte) (ciphertext []byte) {
 }
 
 func (rsaKey RSAKey) SignPSS(message []byte) (signature []byte) {
+	if rsaKey.privateKey == nil {
+		panic("Private Key Not Found")
+	}
 	var opts rsa.PSSOptions
 	opts.SaltLength = rsa.PSSSaltLengthAuto
 	hasher := crypto.SHA256
@@ -70,6 +112,9 @@ func (rsaKey RSAKey) SignPSS(message []byte) (signature []byte) {
 }
 
 func (rsaKey RSAKey) DecryptOAEP(ciphertext []byte) (plaintext []byte) {
+	if rsaKey.privateKey == nil {
+		panic("Private Key Not Found")
+	}
 	label := []byte("")
 	hash := sha256.New()
 	plaintext, err := rsa.DecryptOAEP(hash, rand.Reader, rsaKey.privateKey, ciphertext, label)
@@ -118,6 +163,10 @@ func main() {
 
 	fmt.Println("[DEBUG] Ciphertext : ", hex.EncodeToString(ciphertext))
 	fmt.Println("[DEBUG] Signature  : ", hex.EncodeToString(signature))
+
+	x509encodedMessage := string(pem.EncodeToMemory(&pem.Block{Type: "MESSAGE", Bytes: ciphertext}))
+
+	fmt.Println("[DEBUG] Message : \n", x509encodedMessage)
 
 	fmt.Println("[INFO] Alice Decrypts the ciphertext with her private key and verifies signature with Bob's public key")
 	plaintext := AliceKey.DecryptOAEP(ciphertext)
