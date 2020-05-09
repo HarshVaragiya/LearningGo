@@ -37,6 +37,18 @@ Source [Tour of Go](https://tour.golang.org)
 - ### Randoms
     - [Random Number Generator](Randoms/Random.go)
     - [Show Current Time](Randoms/Time.go)
+    - [Go Logging](Randoms/BasicLogging.go)
+    - [Logrus Logging](Randoms/LogrusLogging.go)
+    
+- ### Crypto
+    - [SymmetricKey (AES-GCM)](Crypto/SymmetricKey)
+    - [PublicKey (RSA)](Crypto/PublicKey)
+    - [Elliptic Curve Diffie Hellman](Crypto/DiffieHellmanKeyExchangeECC)
+
+- ### Concurrency
+    - [Goroutine](Concurrency/Goroutine.go)
+    - [BufferedChannels](Concurrency/BufferedChannels.go)
+    - [Select](Concurrency/Select.go)
 
 # Data Structures
 *Details about them are in their respective folders*
@@ -44,11 +56,12 @@ Source [Tour of Go](https://tour.golang.org)
 - [Maps](DataTypes/Map)
 - [Slices](DataTypes/Slice)
 - [Struct](DataTypes/Struct)
+- [Interface](DataTypes/Interface)
 
 ## Exercise Problems
 - [Square Root](Exercise/SquareRoot)
 - [Picture](Exercise/Pic-Slices)
 - [WordCounter](Exercise/WordCount)
 - [Fibonacci](Exercise/Fibonacci)
-
+- [EquivalentBinaryTrees](Exercise/EquivalentBinaryTrees)
 
