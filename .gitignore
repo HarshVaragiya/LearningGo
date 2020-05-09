@@ -4,3 +4,4 @@ Crypto/SymmetricKey/enc-TestFile.txt
 Crypto/SymmetricKey/dec-TestFile.txt
 Crypto/SymmetricKey/TestFile.txt
 Crypto/DiffieHellmanKeyExchangeECC/entropy.txt
+Randoms/example.log

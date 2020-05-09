@@ -1,0 +1,30 @@
+package main
+
+import (
+	"fmt"
+)
+
+func fibonacci(n int, c chan int) {
+	x, y := 0, 1
+	for i := 0; i < n; i++ {
+		c <- x
+		x, y = y, x+y
+	}
+	close(c)
+}
+
+func main() {
+	c := make(chan int, 25)
+
+	go fibonacci(cap(c), c)
+
+	val, ok := <-c // pops first element , but thats okay
+	fmt.Println(val, ok)
+
+	for i := range c {
+		fmt.Println(i)
+	}
+
+	val, ok = <-c
+	fmt.Println(val, ok)
+}
