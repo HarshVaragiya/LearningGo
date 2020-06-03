@@ -64,4 +64,5 @@ Source [Tour of Go](https://tour.golang.org)
 - [WordCounter](Exercise/WordCount)
 - [Fibonacci](Exercise/Fibonacci)
 - [EquivalentBinaryTrees](Exercise/EquivalentBinaryTrees)
-
+- [Rot13Reader](Exercise/Rot13Reader)
+- [InfiniteReader](Exercise/Readers)
