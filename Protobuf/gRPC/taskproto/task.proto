@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package taskservice;
+
+option go_package = "./taskproto;task";
+
+message Task{
+    string name = 1;
+    bool done = 2;
+    string added = 3;
+}
+
+message TaskList{
+    repeated Task tasks = 1;
+}
+
+message Void {}
+
+service Tasks{
+    rpc List(Void) returns(TaskList){}
+    rpc Add (Task) returns (Void){}
+}

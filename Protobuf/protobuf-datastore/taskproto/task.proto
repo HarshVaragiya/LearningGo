@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package taskservice;
 
-option go_package = "./proto;task";
+option go_package = "./taskproto;task";
 
 message Task{
     string name = 1;

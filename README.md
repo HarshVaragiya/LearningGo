@@ -50,6 +50,10 @@ Source [Tour of Go](https://tour.golang.org)
     - [BufferedChannels](Concurrency/BufferedChannels.go)
     - [Select](Concurrency/Select.go)
 
+- ### Protobuf
+    - [Protobuf as DataStore](Protobuf/protobuf-datastore)
+    - [gRPC](Protobuf/gRPC)
+
 # Data Structures
 *Details about them are in their respective folders*
 - [Arrays](DataTypes/Array)
