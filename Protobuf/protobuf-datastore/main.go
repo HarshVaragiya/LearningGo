@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -11,7 +13,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-var dataStore = "protobuf-datastore/task-datastore.pb"
+var dataStore = "task-datastore.pb"
 
 func main() {
 
@@ -45,21 +47,70 @@ func main() {
 }
 
 func addTask(todo string) error {
-
 	taskObject := &task.Task{Name: todo, Done: false, Added: time.Now().Format(time.RFC850)}
-	taskBytes, err := proto.Marshal(taskObject)
+	file, err := os.OpenFile(dataStore, os.O_CREATE|os.O_RDWR, 0666)
 	if err != nil {
-		log.Printf("error marshalling the task object. error = %v", err)
+		log.Printf("error opening datastore file %v. error = %v", dataStore, err)
 		return err
 	}
-	file, err := os.OpenFile(dataStore, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	existingDataStoreBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		log.Printf("error opening data storage file %s : %v ", dataStore, err)
+		log.Printf("error reading datastore file %v. err = %v", dataStore, err)
+		return err
+	} else {
+		log.Printf("read %v bytes from datastore", len(existingDataStoreBytes))
+	}
+	var taskList task.TaskList
+	if err := proto.Unmarshal(existingDataStoreBytes, &taskList); err != nil {
+		log.Println("error decoding datastore information. existing data might be corrupted.")
+		log.Printf("error = %v", err)
+		return err
+	}
+	taskList.Tasks = append(taskList.Tasks, taskObject)
+	outputBytes, err := proto.Marshal(&taskList)
+	if err != nil {
+		log.Printf("error marshalling the task list object. error = %v", err)
+		return err
+	}
+	if n, err := file.WriteAt(outputBytes, 0x00); err != nil {
+		log.Print("error writing bytes in the file. err = %v", err)
+		return err
+	} else {
+		log.Printf("wrote %v bytes to datastore", n)
+	}
+	if err = file.Close(); err != nil {
+		log.Printf("error closing datastore. error = %v", err)
+		log.Printf("exiting to prevent data corruption.")
 		return err
 	}
 	return nil
 }
 
 func listTasks() error {
+	dataStoreBytes, err := ioutil.ReadFile(dataStore)
+	if err != nil {
+		log.Printf("error opening data storage file %s : %v ", dataStore, err)
+		return err
+	} else {
+		log.Printf("read %v bytes from datastore", len(dataStoreBytes))
+	}
+	var taskList task.TaskList
+	if err := proto.Unmarshal(dataStoreBytes, &taskList); err != nil {
+		log.Println("error decoding datastore information. existing data might be corrupted.")
+		log.Printf("error = %v", err)
+		return err
+	}
+	log.Println("contents of datastore are : ")
+	displayTasks(taskList)
 	return nil
+}
+
+func displayTasks(tasks task.TaskList) {
+	for index, task := range tasks.Tasks {
+		chr := "[X]"
+		if !task.Done {
+			chr = "[ ]"
+		}
+		fmt.Printf("[Task %v] %v - %s -  %s \n", index, chr, task.Added, task.Name)
+	}
 }
